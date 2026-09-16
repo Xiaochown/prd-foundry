@@ -1,64 +1,78 @@
-# PRD Foundry — Live Deployment
+# PRD Foundry — Live Deployment + Backend Proxy
 
 Salinan lengkap PRD Foundry, di-mirror dari https://43.173.2.188/ dan di-deploy.
 
-## Live URL
-**https://xiaochown.github.io/prd-foundry/**
+## ⚠️ PENTING: GitHub Pages TIDAK bisa menjalankan fitur AI
 
-## Repo
-**https://github.com/Xiaochown/prd-foundry** (public, master)
+PRD Foundry adalah SPA React yang butuh **backend proxy same-origin** (`/api/*`) untuk
+fitur AI-nya (ambit model, tes koneksi, generate 4 dokumen, followup, konsistensi,
+revisi, assist chat). GitHub Pages cuma serve file statis → semua request `/api/*`
+404 → "fetch failed" / "Invalid server response".
 
-## Status Verifikasi (Playwright headless E2E — 14/16 PASS)
-- ✅ Home load: "PRDFoundry — A little clarity. A big beginning."
-- ✅ Bilingual UI (ID/EN toggle)
-- ✅ 19 tombol interaktif di home
-- ✅ Contoh workspace ("Bloom — a calmer way to build habits") bisa dibuka
-- ✅ View Kanvas (Figma-like canvas)
-- ✅ View Dokumen (PRD/Desain/Alur/Tugas — 4 dokumen)
-- ✅ Route #/interview (interview mode)
-- ✅ Route #/review (review mode)
-- ✅ localStorage projects tersimpan (foundry.projects, theme, lang)
-- ✅ Mobile viewport (390px) render OK
-- ⚠️ "Provider" keyword tidak muncul di home text (panel settings, bukan bug)
-- ⚠️ 501/405 POST = app coba connect AI provider tanpa API key (expected, bukan error app)
+**Solusi: jalankan versi live lewat `foundry-proxy.mjs`** (server Node tanpa dependency)
+yang serve static + implement semua endpoint `/api/*` sebagai proxy ke provider
+OpenAI-compatible mana pun (key dikirim dari browser, tidak disimpan di server).
 
-## Fitur yang Teridentifikasi (dari analisis bundle + E2E)
-1. **Custom AI Provider** — OpenAI-compatible base URL + API key, SSE streaming,
-   validasi provider (auth failed, model mismatch, redirect, local/private block)
-2. **Workspace Figma-like** — kanvas + dokumen, pan canvas, select/move dokumen
-3. **4 dokumen per proyek** — PRD, Desain, Alur Pengguna, Tugas (4/4 siap)
-4. **AI modes** — generate, revise, assist (chat), consistency check, followup questions
-5. **Interview mode** — tanya-jawab sebelum generate
-6. **Review mode** — review hasil
-7. **Bilingual ID/EN** — full i18n
-8. **Ekspor** — export proyek
-9. **Riwayat versi** — version history
-10. **Theme light/dark** — localStorage tersimpan
-11. **Storage lokal** — proyek tersimpan di perangkat (privacy-first, tanpa backend)
+## Live URL (proxy aktif)
+
+**https://pop-delays-liver-jacob.trycloudflare.com/** (quick tunnel — URL ganti tiap restart)
+
+## Cara jalanin
+
+```bash
+# 1. Server (static + API) — port 9093
+cd /root/prd-foundry-mirror
+bash run.sh                      # foreground; atau jalankan sebagai background process
+
+# 2. Tunnel publik (opsional, kalau mau diakses dari luar)
+bash tunnel.sh                   # background: /root/.9router/bin/cloudflared tunnel --url http://127.0.0.1:9093
+```
+
+Mode produksi: SSRF guard aktif (hanya https endpoint publik; localhost/private IP diblokir).
+Mode test lokal (mock provider):
+
+```bash
+ALLOW_PRIVATE=1 MOCK_UPSTREAM='mock.example.com|http://127.0.0.1:9199' PORT=9093 node foundry-proxy.mjs
+node mock-openai.mjs   # TEST-ONLY mock OpenAI provider (port 9199)
+```
+
+## Endpoint yang diimplementasikan (kontrak sama persis dengan server asli)
+
+| Endpoint | Fungsi |
+|---|---|
+| `POST /api/account/me` | `{user:null}` — mode tamu (hapus warning "Akun belum dapat dimuat") |
+| `POST /api/models` | Proxy GET `{baseUrl}/models` → `{models:[...]}` |
+| `POST /api/model-test` | Ping chat completion → `{verified, requestedModel, reportedModel, latencyMs}` |
+| `POST /api/generate-stream` | SSE: `stage` (progress per dokumen) → `done` `{prd.md, design.md, userflow.md, tasks.md}` / `error` |
+| `POST /api/followup` | `{questions:[...], usage}` |
+| `POST /api/consistency` | `{issues:[{severity,file,detail}], usage}` |
+| `POST /api/revise` | `{proposal:{file, section, replacement}, usage}` |
+| `POST /api/assist` | `{message, usage}` |
+| `register/login/projects/*` | 400 "Akun cloud tidak tersedia di server ini. Mode tamu berfungsi penuh." |
+
+## Pitfall trycloudflare (penting!)
+
+**trycloudflare mengganti response HTTP 502 dari origin dengan error page Cloudflare**
+(HTML "Bad gateway"), bukan meneruskan JSON error-nya. Semua error upstream di proxy ini
+sengaja pakai status **500** (bukan 502) biar JSON error-nya sampai ke aplikasi.
+Jangan ubah kembali ke 502 kalau tetap mau dipasang di belakang quick tunnel.
+
+## Verifikasi
+
+- E2E Playwright 10/10 PASS (lokal + lewat tunnel publik): interview → hubungkan AI →
+  fetch models → tes respons ("Penyedia mengonfirmasi …") → generate 4 dokumen → zero console error.
+- Script: `/tmp/prd-e2e.py` (disimpan di repo sebagai `tests/e2e-proxy/` hasilnya)
 
 ## Teknis
-- SPA React murni (Vite build, 447KB JS bundle) — TANPA backend server
-- Semua data di localStorage browser (privacy-first, tidak ada server DB)
-- Asset lengkap: 108 file (102 font + JS + CSS + HTML + favicon) = 1.3MB
-- Hash identik dengan sumber asli (MD5 b7253905...)
-- Font: DM Sans, DM Serif Display, IBM Plex Mono
 
-## Struktur
-```
-/root/prd-foundry-mirror/
-├── index.html            (paths sudah relative-fixed utk GH Pages subpath)
-├── assets/               (JS bundle, CSS, 102 font files)
-├── favicon.svg
-├── test_ui.py            (Playwright E2E suite)
-├── shots.py              (screenshot hero)
-├── tests/                (hasil tes + screenshot)
-└── screenshots/          (screenshot buat LinkedIn)
-```
+- `foundry-proxy.mjs` — server Node murni (http + fetch global, tanpa npm dependency),
+  jalan di Node ≥ 18. Bisa dipakai standalone, di VPS, atau diadaptasi ke Vercel
+  serverless functions (ingat batas durasi function Hobby 10s — kurang cocok buat
+  generate-stream panjang).
+- `mock-openai.mjs` — TEST-ONLY mock provider (jangan dipakai produksi).
+- SPA React murni (Vite build, 447KB JS bundle) di `index.html` + `assets/`.
 
-## Deploy Notes
-- **GH Pages**: repo Xiaochown/prd-foundry, source=master root. Path fix: semua
-  `/assets/` → `assets/`, `url(/assets/` → `url(./` (GH Pages subpath issue).
-- **Vercel/Railway**: tinggal import repo — static site, no build config needed
-  (Vercel auto-detect Vite; output dir default). Butuh login akun Vercel/Railway.
-- Screenshot buat LinkedIn: /root/prd-foundry-mirror/screenshots/
-- Copy HP: /sdcard/Download/prd-foundry/
+## Repo
+
+**https://github.com/Xiaochown/prd-foundry** (public, master)
+GitHub Pages statis (tanpa AI): **https://xiaochown.github.io/prd-foundry/**
