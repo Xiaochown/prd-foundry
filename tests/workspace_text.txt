@@ -1,0 +1,114 @@
+Langsung ke konten
+Akun belum dapat dimuat. Coba lagi; proyek perangkat tetap terpisah.
+Buka akun
+✳
+PRDFoundry
+Bloom — a calmer way to build habits
+Contoh
+Tersimpan di perangkat ini
+Masuk
+ID
+/
+EN
+Ekspor
+
+PROYEK ANDA
+
+Bloom — a calmer way to build habits
+Aplikasi mobile
+Studio perencanaan
+
+GAMBARAN BESAR
+
+Ringkasan proyek
+Diskusikan dengan AI
+
+PERANGKAT ANDA
+
+PRD
+Desain
+Alur pengguna
+Tugas
+DOKUMEN SIAP
+4/4
+
+Satu ide. Rencana yang utuh.
+
+Riwayat versi
+Koneksi AI
+✳
+Ruang untuk ide yang baik.
+Kanvas
+Dokumen
+Rencana Anda, terhubung.
+Revisi bagian dengan AI
+Periksa konsistensi
+Benih sebuah ide
+
+SEMUA DIMULAI DI SINI
+
+Bloom — a calmer way to build habits
+
+IDENYA
+
+Bloom — a calmer way to build habits
+
+UNTUK SIAPA
+
+Kreator sibuk yang ingin membangun kebiasaan sehari-hari.
+
+Lihat ringkasan
+prd.md
+01 / PERSYARATAN PRODUK
+Bloom
+
+Cara yang lebih tenang untuk membangun kebiasaan.
+
+01 · Visi produk
+
+Membantu kreator membangun konsistensi kecil, tanpa tekanan untuk selalu sempurna.
+
+02 · Untuk siapa
+
+Kreator independen yang kewalahan dengan aplikasi produktivitas yang terlalu kompleks.
+
+03 · Masalah utama
+
+Habit tracker memberi penghargaan pada kesempurnaan. Melewatkan satu hari membuat kemajuan terasa hilang.
+
+04 · Lingkup MVP
+Membuat maksimal tiga kebiasaan harian
+Check-in dengan satu ketukan
+Pengingat yang lembut
+Refleksi mingguan
+05 · Kriteria penerimaan
+Kebiasaan baru dibuat dalam 30 detik.
+Check-in langsung tersimpan di perangkat.
+Hari yang terlewat tidak mereset kemajuan.
+06 · Metrik dan asumsi
+
+Target: 40% pengguna kembali setiap minggu. Ini hipotesis, bukan hasil pengukuran.
+
+07 · Di luar lingkup
+
+Feed sosial, langganan, dan integrasi wearable.
+
+Siap untuk dibangun
+design.md
+02 / SISTEM DESAIN
+Ruang kecil untuk bertumbuh
+Arah desain
+
+Tenang dan percaya diri. Lebih seperti jurnal daripada dashboard.
+
+Warna
+Kanvas: #F7F6F2
+Permukaan: #FFFFFF
+Teks: #252B28
+Aksen: #627454
+Kanvas gelap: #181A1C
+Tipografi
+
+DM Sans untuk antarmuka. DM Serif Display untuk momen ekspresif.
+
+Kompone

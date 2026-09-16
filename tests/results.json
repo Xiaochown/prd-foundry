@@ -1,0 +1,82 @@
+[
+  {
+    "test": "home_load",
+    "ok": true,
+    "detail": "PRDFoundry — A little clarity. A big beginning."
+  },
+  {
+    "test": "home_kw_PRDFoundry",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "test": "home_kw_workspace",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "test": "home_kw_Provider",
+    "ok": false,
+    "detail": ""
+  },
+  {
+    "test": "home_kw_Mulai",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "test": "home_kw_Buat",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "test": "buttons_found",
+    "ok": true,
+    "detail": "19 buttons: ['Buka akun', 'Masuk', 'ID', 'EN', '', 'Mulai sekarang', 'Mulai dari sebuah ide', 'Lihat contohnya']"
+  },
+  {
+    "test": "example_workspace",
+    "ok": true,
+    "detail": "http://127.0.0.1:8081/#/workspace/f8555f83-4a64-4953-9330-06f65862cf7f"
+  },
+  {
+    "test": "workspace_content",
+    "ok": true,
+    "detail": "2000 chars"
+  },
+  {
+    "test": "view_Kanvas",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "test": "view_Dokumen",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "test": "route_#/interview",
+    "ok": true,
+    "detail": "http://127.0.0.1:8081/#/interview"
+  },
+  {
+    "test": "route_#/review",
+    "ok": true,
+    "detail": "http://127.0.0.1:8081/#/review"
+  },
+  {
+    "test": "route_#/workspace/demo",
+    "ok": true,
+    "detail": "http://127.0.0.1:8081/#/workspace/demo"
+  },
+  {
+    "test": "localstorage_keys",
+    "ok": true,
+    "detail": "{\"foundry.projects\": \"[{\\\"id\\\":\\\"f8555f83-4a64-4953-9330-06f65862cf7f\\\",\\\"name\\\":\\\"Bloom \\u2014 a calmer way to build habits\\\",\\\"brief\\\":\", \"foundry.theme\": \"\\\"light\\\"\", \"foundry.followup\": \"{\\\"questions\\\":null,\\\"answers\\\":{},\\\"notice\\\":\\\"\\\"}\", \"foundry.lang\": \"\\\"id\\\"\"}"
+  },
+  {
+    "test": "no_console_errors",
+    "ok": false,
+    "detail": "1 errors: [\"Failed to load resource: the server responded with a status of 501 (Unsupported method ('POST'))\"]"
+  }
+]
