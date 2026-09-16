@@ -1,0 +1,5 @@
+# Test artifacts — repo publik bersih buat recruiter
+tests/
+screenshots/
+__pycache__/
+*.pyc

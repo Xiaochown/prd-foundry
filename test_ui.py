@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 
 OUT = "/root/prd-foundry-mirror/tests"
 os.makedirs(OUT, exist_ok=True)
-BASE = "http://127.0.0.1:8099/prd-foundry/"
+BASE = "https://xiaochown.github.io/prd-foundry/"
 results = []
 
 def log(name, ok, detail=""):
